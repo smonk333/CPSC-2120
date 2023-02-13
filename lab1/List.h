@@ -1,5 +1,5 @@
 /*
- * Name: Garrett Boling
+ * Name:
  * Date Submitted: 1/30/23
  * Lab Section:
  * Assignment Name:
