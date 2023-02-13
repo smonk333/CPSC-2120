@@ -41,7 +41,7 @@ on how the function is implemented
 class Grouping
 {
     private:
-        int grid[10][10];
+        int grid[10][10]{};
         vector<vector<GridSquare>> groups;
     public:
         Grouping(); //Default constructor, no groups
