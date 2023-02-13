@@ -1,4 +1,4 @@
-#include "Grouping.h"
+#include "../Grouping.h"
 
 #include <iostream>
 #include <vector>
