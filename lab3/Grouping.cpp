@@ -15,83 +15,66 @@ using namespace std;
 
 //Implement the (parameterized) constructor and findGroup functions below
 vector<int> convert(string tmp) { //convert the tmp string from '.' and 'X' to '0' and '1'
-    string convert; //make a string that will hold the converted data (1's and 0's instead of .'s or X's)
     vector<int> a; //make a vector to temporarily hold the values before we convert them to an array;
 
-    for (int i = 0; i <= tmp.size(); i++) {
+    for (int i = 0; i < tmp.size(); i++) {
         if (tmp[i] == '.') {
-            convert[i] = 0;
-        }
-        else {
-            convert[i] = 1;
-        }
-    }
-    //now we have a string of 1's and 0's! time to turn it into an array.
-
-    for (char i : convert) { //for loop to take each character in the "convert" string and convert the chars to ints, before pushing them onto the temporary "a" vector
-        if (i == '0') {
             a.push_back(0);
         }
-        else if (i == '1') {
+        else {
             a.push_back(1);
         }
     }
 
-
     return a; //return the vector of ints
 }
 
-Grouping::Grouping(std::string fileName) {
-    ifstream in (fileName); //creating a filestream and pointing it at the file that was passed in from main()
-    string tmp; //making a string to temporarily hold each line from the filestream
-    vector<int> converted; //making a vector of ints to hold the output of the conversion to ints from a string
-    vector<vector<int>> array; //making a 2d vector to hold the rows in 2d
-
-    while (getline (in, tmp)) { //start grabbing lines from the file
-        converted = convert(tmp); //convert the tmp string from '.' and 'X' to '0' and '1'
-        array.push_back(converted);
+Grouping::Grouping(std::string fileName) : grid{}, groups(){
+    // Read the input file into the grid
+    std::ifstream inputFile(fileName);
+    if (!inputFile.is_open()) {
+        std::cerr << "Unable to open file " << fileName << std::endl;
+        return;
     }
-
-    //convert the 2d vector into a 2d int array, and push those values into this->grid[][]
-
-    int rows = array.size();
-    int cols = array[0].size();
-    int **arr2d = new int*[rows];
-
-    for (int i = 0; i < rows; i++) {
-        arr2d[i] = new int[cols];
-        for (int j = 0; j < cols; j++) {
-            arr2d[i][j] = array[i][j];
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            char c;
+            inputFile >> c;
+            if (c == '.') {
+                grid[i][j] = 0;
+            } else {
+                grid[i][j] = 1;
+            }
         }
     }
+    inputFile.close();
 
-    //fill the this->grid member variable with the contents of the arr2d variable
-
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            this->grid[i][j] = arr2d[i][j];
+    // Process the grid to populate groups
+    for (int row = 0; row < 10; row++) {
+        for (int col = 0; col < 10; col++) {
+            if (grid[row][col] == 1) {
+                std::vector<GridSquare> group;
+                findGroup(row, col, group);
+                groups.push_back(group);
+            }
         }
     }
-
-    //freeing memory held by arrays and vectors and closing the filestream as they are no longer necessary
-    in.close();
-
-    for (int i = 0; i < rows; i++) {
-        delete[] arr2d[i];
-    }
-    delete[] arr2d;
-
-    for (int i = 0; i < rows; i++) {
-        array[i].clear();
-    }
-
-    array.clear();
-
-    converted.clear();
 }
 
-void Grouping::findGroup(int r, int c) {
+// Recursive function that finds the group of an occupied square
+// r: the row of the current square
+// c: the column of the current square
 
+void Grouping::findGroup(int r, int c, vector<GridSquare> &group) {
+    if (r < 0 || r >= 10 || c < 0 || c >= 10 || grid[r][c] == 0) {
+        return;
+    }
+    grid[r][c] = 0;
+    group.push_back(GridSquare(r, c));
+    findGroup(r - 1, c, group);
+    findGroup(r + 1, c, group);
+    findGroup(r, c - 1, group);
+    findGroup(r, c + 1, group);
 }
 
 
@@ -99,13 +82,13 @@ void Grouping::findGroup(int r, int c) {
 
 //Simple main function to test Grouping
 //Be sure to comment out main() before submitting
-int main()
+/*int main()
 {
-    Grouping input1("input1.txt");
+    Grouping input1("input4.txt");
     input1.printGroups();
     
     return 0;
-}
+}*/
 
 //Do not modify anything below
 
