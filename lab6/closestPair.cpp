@@ -32,6 +32,16 @@ struct point
 */
 double closestPair(string filename);
 
+double closestPair(string filename) {
+    ifstream input(filename);
+    string size;
+
+    if (input) {
+        getline(input, size); //get the number of points from the file and save this to a string, we convert the string to an int on the next line
+
+
+    }
+}
 int main()
 {
     double min;
