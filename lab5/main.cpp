@@ -81,6 +81,10 @@
      ifstream fileIn(filename); //making a filestream object to pull in words form the file specified
      string word;
 
+     if (!fileIn.is_open()) {
+         cout << "file not found. Exiting." << endl;
+     }
+
      while (getline(fileIn, word)) {
         words.insert(word);
      }

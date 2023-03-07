@@ -28,26 +28,26 @@ int Stringset::getSize() const
 }
 
 void Stringset::insert(string word) {
-    if (!find(word)) {
-        hash<string> stringHash;
+    if (!this->find(word)) {
+        hash<string> hashed;
         if (size != num_elems) {
-            table[stringHash(word) % size].push_back(word);
+            table[hashed(word) % size].push_back(word);
             ++num_elems;
         }
 
         else {
-            vector<list<string>> tmp;
+            vector<list<string>> big;
             int sizeTmp = size * 2;
-            tmp.resize(sizeTmp);
+            big.resize(sizeTmp);
 
             for (int i = 0; i < size; i++) {
                 if (!table[i].empty()) {
                     for(string const &j : table[i]) {
-                        tmp[stringHash(j) % sizeTmp].push_back(j);
+                        big[hashed(j) % sizeTmp].push_back(j);
                     }
                 }
             }
-            table = tmp;
+            table = big;
             size = sizeTmp;
             insert(word);
         }
@@ -55,9 +55,9 @@ void Stringset::insert(string word) {
 }
 
 bool Stringset::find(string word) const {
-    hash<string> hashString;
-        if (table[hashString(word) % size].empty()) {
-            for (string const& j : table[hashString(word) % size]) {
+    hash<string> hashed;
+        if (!table[hashed(word) % size].empty()) {
+            for (string const& j : table[hashed(word) % size]) {
                 if (j == word) {
                     return true;
                 }
@@ -67,9 +67,9 @@ bool Stringset::find(string word) const {
 }
 
 void Stringset::remove(string word) {
-    hash<string> stringHash;
+    hash<string> hashed;
     if (find(word)) {
-        table[stringHash(word) % size].remove(word);
+        table[hashed(word) % size].remove(word);
         --num_elems;
     }
 }
